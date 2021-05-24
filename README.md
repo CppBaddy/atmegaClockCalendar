@@ -20,5 +20,5 @@ Features:
 
 ![atmegaClock schematics](https://github.com/CppBaddy/atmegaClockCalendar/blob/main/schematics.png?raw=true)
 
-Original schematics and some pictures can be found ![here](https://easyeda.com/Yulay/atmega328p-clock_copy_copy_copy)
+Original schematics and some pictures can be found [here](https://easyeda.com/Yulay/atmega328p-clock_copy_copy_copy)
 
