@@ -14,7 +14,7 @@
 
 #include "RotaryEncoder.hpp"
 
-#define delay_ms(x)	_delay_ms(x)
+#define delay_ms(x) _delay_ms(x)
 
 
 enum eUserInput
@@ -241,46 +241,46 @@ ISR( TIMER1_COMPA_vect ) // 1Hz
 // ADC interrupt service routine
 ISR( ADC_vect )
 {
-	if(adcState)
-	{
-		uint8_t v = ~(ADCH + 96); //converting to positive slope
+    if(adcState)
+    {
+        uint8_t v = ~(ADCH + 96); //converting to positive slope
 
-		gBatteryVoltage = (gBatteryVoltage + v) >> 1; //averaging
+        gBatteryVoltage = (gBatteryVoltage + v) >> 1; //averaging
 
-		if(PowerSleep != gPowerSaveMode)
-		{
-			AdcIn_Light();
+        if(PowerSleep != gPowerSaveMode)
+        {
+            AdcIn_Light();
             LightSensor_On();
 
-			adcState = 0;
-		}
-	}
-	else
-	{
-		uint8_t v = (ADCH >> 1) + MinBrightness;
+            adcState = 0;
+        }
+    }
+    else
+    {
+        uint8_t v = (ADCH >> 1) + MinBrightness;
 
-		if(v > gMaxBrightness) //clamp value
-		{
-		    v = gMaxBrightness;
-		}
+        if(v > gMaxBrightness) //clamp value
+        {
+            v = gMaxBrightness;
+        }
 
-		mBrightness = v; //TODO TEMP DEBUG
+        mBrightness = v; //TODO TEMP DEBUG
 
-		Display_Brighness(v);
+        Display_Brighness(v);
 
-		AdcIn_Voltage();
+        AdcIn_Voltage();
         LightSensor_Off();
 
-		adcState = 1;
-	}
+        adcState = 1;
+    }
 
-	ADC_Disable();
+    ADC_Disable();
 }
 
 
 void onPowerFull()
 {
-	gPowerSaveMode = PowerFull;
+    gPowerSaveMode = PowerFull;
     gMaxBrightness = 255;
 }
 
@@ -290,12 +290,12 @@ void onPowerSave()
     gMaxBrightness = PowerSaveBrightness;
 
     Display_On();
-	Encoder_Enable();
+    Encoder_Enable();
 }
 
 void onPowerSleep()
 {
-	gPowerSaveMode = PowerSleep;
+    gPowerSaveMode = PowerSleep;
 
     Encoder_Disable();
     Display_Off();
@@ -468,7 +468,7 @@ inline void DisplayDateTime()
 }
 
 //TODO  
-//	add chime at noon, short beep each hour from 8:00 to 20:00
+//  add chime at noon, short beep each hour from 8:00 to 20:00
 
 int main( void )
 {
@@ -572,12 +572,12 @@ inline void Setup()
 
     //PB0 - output + pullup
     //PB2 - output + pullup
-	DDRB |= _BV(DDB5) | _BV(DDB3) | _BV(DDB2) | _BV(DDB1) | _BV(DDB0); //SPI output for LCD
+    DDRB |= _BV(DDB5) | _BV(DDB3) | _BV(DDB2) | _BV(DDB1) | _BV(DDB0); //SPI output for LCD
 
-	DDRC |= _BV(PC3); // | _BV(PC2) | _BV(PC1); //enable output ports
-	PORTC |= _BV(PC4) | _BV(PC5); //enable pullups on SDA and SCL
+    DDRC |= _BV(PC3); // | _BV(PC2) | _BV(PC1); //enable output ports
+    PORTC |= _BV(PC4) | _BV(PC5); //enable pullups on SDA and SCL
 
-	DDRD |= _BV(DDD2) | _BV(DDD3) | _BV(DDD7); //enable output ports
+    DDRD |= _BV(DDD2) | _BV(DDD3) | _BV(DDD7); //enable output ports
     PORTD |= EncoderMask | _BV(PD7);  //enabling pull ups for inputs and release LCD reset
     PCMSK2 |= EncoderMask;  //enable pin change interrupt mask
 

@@ -75,9 +75,9 @@ Timer2 PWM LED light 4 KHz
 
 #define ADC_LEFT_JUSTIFIED  _BV(ADLAR)  //0x20 - left justified, so we can use ADCH as a 8 bit result
 
-#define VCC_ADC		255
-#define BG_VOLTAGE	11/10
-#define VOLTAGE(x)	(255 - 96 - ((VCC_ADC * BG_VOLTAGE) / x)
+#define VCC_ADC     255
+#define BG_VOLTAGE  11/10
+#define VOLTAGE(x)  (255 - 96 - ((VCC_ADC * BG_VOLTAGE) / x)
 
 
 enum
@@ -129,7 +129,7 @@ inline void Timer0_Enable()
 inline void Timer0_Disable()
 {
     TIMSK0 &= ~_BV(OCIE0A);
-	PRR |= _BV(PRTIM0); //clock disable
+    PRR |= _BV(PRTIM0); //clock disable
 }
 
 inline void Timer1_Enable()
@@ -160,28 +160,28 @@ inline void Timer2_Disable()
 
 inline void ADC_Enable()
 {
-	PRR &= ~_BV(PRADC);
+    PRR &= ~_BV(PRADC);
 }
 
 inline void ADC_Disable()
 {
-	PRR |= _BV(PRADC);
+    PRR |= _BV(PRADC);
 }
 
 inline void ADC_Start()
 {
-	ADC_Enable();
-	ADCSRA |= _BV(ADSC);
+    ADC_Enable();
+    ADCSRA |= _BV(ADSC);
 }
 
 inline void AdcIn_Voltage()
 {
-	ADMUX = _BV(REFS0) | _BV(ADLAR) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1);
+    ADMUX = _BV(REFS0) | _BV(ADLAR) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1);
 }
 
 inline void AdcIn_Light()
 {
-	ADMUX = _BV(REFS0) | _BV(ADLAR);
+    ADMUX = _BV(REFS0) | _BV(ADLAR);
 }
 
 inline void LightSensor_On()
@@ -197,17 +197,17 @@ inline void LightSensor_Off()
 inline void Encoder_Enable()
 {
     PCIFR |= _BV(PCIF2); //clear int flag
-	PCICR |= _BV(PCIE2); //enable pin change int
+    PCICR |= _BV(PCIE2); //enable pin change int
 }
 
 inline void Encoder_Disable()
 {
-	PCICR &= ~_BV(PCIE2); //disable pin change int
+    PCICR &= ~_BV(PCIE2); //disable pin change int
 }
 
 inline uint8_t Encoder_Read()
 {
-	return EncoderMask & PIND;
+    return EncoderMask & PIND;
 }
 
 inline void Display_On()
@@ -217,15 +217,15 @@ inline void Display_On()
     DDRB |= _BV(DDB3); //OC2B as PWM output
     PORTD |= _BV(PD2); //switch on power to display module
 
-	display_Init();
+    display_Init();
 }
 
 inline void Display_Off()
 {
-	PORTD &= ~_BV(PD2); //switch off power to display module
+    PORTD &= ~_BV(PD2); //switch off power to display module
 
     DDRB &= ~_BV(DDB3); //OC2B PWM disconnect
-	PRR |= _BV(PRSPI) | _BV(PRTIM2); //stop SPI & timer2 PWM
+    PRR |= _BV(PRSPI) | _BV(PRTIM2); //stop SPI & timer2 PWM
 }
 
 inline void Display_Brighness(uint8_t v)
@@ -235,14 +235,14 @@ inline void Display_Brighness(uint8_t v)
 
 inline void SetLED(bool v)
 {
-	if(v)
-	{
-		PORTB |= _BV(PB1);
-	}
-	else
-	{
-		PORTB &= ~_BV(PB1);
-	}
+    if(v)
+    {
+        PORTB |= _BV(PB1);
+    }
+    else
+    {
+        PORTB &= ~_BV(PB1);
+    }
 }
 
 inline void SetPB0(bool v)
@@ -259,43 +259,43 @@ inline void SetPB0(bool v)
 
 inline void ToggleLED()
 {
-	PINB |= _BV(PB0); //toggle output port
+    PINB |= _BV(PB0); //toggle output port
 }
 
 void SPI_MasterInit(void)
 {
-	/* Set MOSI and SCK output, all others input */
-	DDRB = _BV(PB3) | _BV(PB5);
+    /* Set MOSI and SCK output, all others input */
+    DDRB = _BV(PB3) | _BV(PB5);
 
-	/* Enable SPI, Master, set clock rate fck/16 */
-	SPCR = _BV(SPE) | _BV(MSTR) | _BV(SPR0);
+    /* Enable SPI, Master, set clock rate fck/16 */
+    SPCR = _BV(SPE) | _BV(MSTR) | _BV(SPR0);
 }
 void SPI_MasterTransmit(char cData)
 {
-	/* Wait for prev transmission complete */
-	while(!(SPSR & _BV(SPIF)))
-	;
+    /* Wait for prev transmission complete */
+    while(!(SPSR & _BV(SPIF)))
+    ;
 
-	/* Start new transmission */
-	SPDR = cData;
+    /* Start new transmission */
+    SPDR = cData;
 }
 
-void GLCD_Command(char cmd)		/* GLCD command function */
+void GLCD_Command(char cmd)     /* GLCD command function */
 {
-	SPI_MasterTransmit(0xf8);  //command sync
-	SPI_MasterTransmit(cmd & 0x0f);
-	SPI_MasterTransmit(cmd << 4);
+    SPI_MasterTransmit(0xf8);  //command sync
+    SPI_MasterTransmit(cmd & 0x0f);
+    SPI_MasterTransmit(cmd << 4);
 }
 
-void GLCD_Init()			/* GLCD initialize function */
+void GLCD_Init()            /* GLCD initialize function */
 {
-	SPI_MasterInit();
+    SPI_MasterInit();
 
-	GLCD_Command(0x3E);		/* Display OFF */
-	GLCD_Command(0x40);		/* Set Y address (column=0) */
-	GLCD_Command(0xB8);		/* Set x address (page=0) */
-	GLCD_Command(0xC0);		/* Set z address (start line=0) */
-	GLCD_Command(0x3F);		/* Display ON */
+    GLCD_Command(0x3E);     /* Display OFF */
+    GLCD_Command(0x40);     /* Set Y address (column=0) */
+    GLCD_Command(0xB8);     /* Set x address (page=0) */
+    GLCD_Command(0xC0);     /* Set z address (start line=0) */
+    GLCD_Command(0x3F);     /* Display ON */
 }
 
 

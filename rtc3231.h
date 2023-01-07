@@ -5,17 +5,17 @@
 
 struct rtc_time
 {
-	uint8_t sec;
-	uint8_t min;
-	uint8_t hour;
+    uint8_t sec;
+    uint8_t min;
+    uint8_t hour;
 };
 
 struct rtc_date
 {
-	uint8_t wday;
-	uint8_t day;
-	uint8_t month;
-	uint8_t year;
+    uint8_t wday;
+    uint8_t day;
+    uint8_t month;
+    uint8_t year;
 };
 
 struct temp_t

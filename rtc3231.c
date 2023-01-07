@@ -6,41 +6,41 @@
 
 static unsigned char bcd (unsigned char data)
 {
-	unsigned char bc;
+    unsigned char bc;
 
-	bc = (data >> 4) * 10 + (data & 0x0f);
+    bc = (data >> 4) * 10 + (data & 0x0f);
 
     return bc;
 }
 
 static unsigned char bin(unsigned char dec)
 {
-	char bcd = ((dec / 10) << 4) | (dec % 10);
-	return bcd;
+    char bcd = ((dec / 10) << 4) | (dec % 10);
+    return bcd;
 }
 
 
 void rtc3231_init(void)
 {
-	if(i2c_start_condition())
-	{
+    if(i2c_start_condition())
+    {
         i2c_send_byte(RTC_WADDR);
         i2c_send_byte(0x0E);
         i2c_send_byte(0x04); //desable 1Hz SQW pin
         i2c_send_byte(0x00); //reset OSF flag, disable 32kHz output
 
         i2c_stop_condition();
-	}
+    }
 }
 
 void rtc3231_read_time(struct rtc_time *time)
 {
-	if(i2c_start_condition())
-	{
+    if(i2c_start_condition())
+    {
         i2c_send_byte(RTC_WADDR);
         i2c_send_byte(0x00);
         i2c_stop_condition();
-	}
+    }
 
     if(i2c_start_condition())
     {
@@ -51,7 +51,7 @@ void rtc3231_read_time(struct rtc_time *time)
         time->hour = bcd(i2c_recv_last_byte());
 
         i2c_stop_condition();
-	}
+    }
 }
 
 void rtc3231_read_date(struct rtc_date *date)
